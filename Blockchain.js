@@ -7,7 +7,6 @@ const chainDB2 = './chaindata2';
 const crypto = require('crypto');
 const EC = require('elliptic').ec;
 const ec = new EC('secp256k1');
-var bigInt = require("big-integer");
 const db = level(chainDB, { createIfMissing: true }, function (err, db) {
     if (err instanceof level.errors.OpenError) {
         console.log('failed to open database')
@@ -24,9 +23,7 @@ function addDataToLevelDB(key,value){
 
     return db.put(key, value);
 }
-function getRndInteger(min, max) {
-    return Math.floor(Math.random() * (max - min) ) + min;
-}
+
 // Get data from levelDB with key
 function getDataFromLevelDB(key){
     var result = db.get(key);
@@ -93,23 +90,10 @@ class Blockchain{
         //var hashHesaplanacakBody = JSON.stringify(newBlock);
 
         //newBlock.hash = SHA256(hashHesaplanacakBody).toString();
-        await newBlock.mineBlock(this.difficulty);
-
-        //console.log(BigInt(string););
-        var hexString = newBlock.hash.toString(16);
-        var recall_int = parseInt(hexString, 16);
-        //console.log("Mod_value:"+ 1000000000002 % 10);
-        //var a =getRndInteger(0, 1000000000002);
-        //console.log("a:" + a + " mod:"+ a%10 );
-        var a = 1; //smallest number
-        newBlock.recall_block = Math.floor(Math.random()*(this.total_chain_height-a+1))+a;;
-        //console.log("recall:" + newBlock.recall_block + " mod:"+ newBlock.recall_block%10 );
-        //console.log("recall:"+ recall_int, "--large_recall:"+ bigInt(recall_int))
-        console.log("added block height: " + newBlock.height + " hash:" + newBlock.hash.toString() +" -its recall: "+ newBlock.recall_block);
-
+        newBlock.mineBlock(this.difficulty);
+        console.log("added block height: " + newBlock.height + " hash:" + newBlock.hash.toString() +"recall: " + newBlock.recall_block)
         //newBlock.data =
         this.total_chain_height++;
-
         await addDataToLevelDB(newBlock.height, JSON.stringify(newBlock));
         console.log("Block " + (newBlock.height)+" added to DB");
         return newBlock.height;
@@ -215,7 +199,7 @@ const kayitEkle = (name) => bc.addBlock(new BlockClass.StarBlock(name))
 
 const main = async ()=> {
 
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 10; i++) {
         const data1Result = await kayitEkle("Data"+(i+1));
     }
     /*await bc.guncelle2(8);
